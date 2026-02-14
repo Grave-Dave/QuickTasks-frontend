@@ -1,18 +1,17 @@
-import type {TaskPriority, TaskStatus} from "@/types/task.ts";
 
-export const STATUS_LABELS: Record<TaskStatus, string> = {
-  todo: "Do zrobienia",
-  done: "Zrobione",
+export const STATUS_LABELS: Record<number, string> = {
+  0: "Do zrobienia",
+  1: "Zrobione",
 };
 
 /** Kolor wizualny zadania na podstawie statusu (do zrobienia = pomarańczowy, zrobione = zielony) */
-export const STATUS_COLOR: Record<TaskStatus, string> = {
-  todo: "#f59e0b",
-  done: "#22c55e",
+export const STATUS_COLOR: Record<number, string> = {
+  0: "#f59e0b",
+  1: "#22c55e",
 };
 
-export const PRIORITY_LABELS: Record<TaskPriority, string> = {
-  low: "Niski",
-  medium: "Średni",
-  high: "Wysoki",
+export const PRIORITY_LABELS: Record<number, string> = {
+  1: "Niski",
+  2: "Średni",
+  3: "Wysoki",
 };

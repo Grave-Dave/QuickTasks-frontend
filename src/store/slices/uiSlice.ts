@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ITask } from "@/types/task";
+import type { ITasksResponse } from "@/api/types";
 
 interface IUiSlice {
   notification: {
@@ -11,7 +11,7 @@ interface IUiSlice {
     content: string;
   } | null;
   isTaskDialogOpen: boolean;
-  editingTask: ITask | null;
+  editingTask: ITasksResponse | null;
 }
 
 const initialState: IUiSlice = {
@@ -31,13 +31,12 @@ export const uiSlice = createSlice({
     setNotificationModal: (state, action: PayloadAction<IUiSlice["notificationModal"]>) => {
       state.notificationModal = action.payload;
     },
-    openTaskDialog: (state, action: PayloadAction<ITask | undefined>) => {
+    openTaskDialog: (state, action: PayloadAction<ITasksResponse | undefined>) => {
       state.isTaskDialogOpen = true;
       state.editingTask = action.payload ?? null;
     },
     closeTaskDialog: (state) => {
       state.isTaskDialogOpen = false;
-      state.editingTask = null;
     },
   },
 });

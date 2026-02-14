@@ -14,7 +14,7 @@ const menuItems: IMenuItem[] = [
   {
     label: "Dashboard",
     icon: <ListTask className="size-5" />,
-    path: "/tasks",
+    path: "/",
   },
   {
     label: "DoneTasks",
@@ -29,11 +29,10 @@ const DashboardMenu = () => {
   return (
     <div
       className={cn(
-        "flex shrink-0 flex-col rounded-[12px] bg-white transition-[width] duration-200",
+        "flex h-full shrink-0 flex-col rounded-[12px] bg-white transition-[width] duration-200",
         "shadow-[0px_2px_5px_rgba(6,25,56,0.06)]",
         isCondensed ? "w-14 p-2" : "w-[280px] p-4"
       )}
-      style={{ height: "calc(100vh - 80px)" }}
     >
       <nav className="flex flex-1 flex-col gap-4 overflow-hidden">
         {menuItems.map((item) => (

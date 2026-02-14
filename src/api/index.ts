@@ -1,2 +1,2 @@
 export { axiosInstance } from "./axios";
-// export * from './endpoints';
+export * from "./endpoints";

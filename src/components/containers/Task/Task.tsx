@@ -1,36 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Check2, Pencil, ArrowCounterclockwise } from "react-bootstrap-icons";
-import type { ITask, TaskStatus } from "@/types/task";
-import { updateTaskStatus } from "@/api/tasks";
+import type { ITasksResponse } from "@/api/types";
+import { usePatchTask } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
-import { useDispatch } from "@/store";
-import { tasksSliceActions } from "@/store";
+import { useQueryClient } from "@tanstack/react-query";
 import { PRIORITY_LABELS, STATUS_COLOR, STATUS_LABELS } from "@/consts.ts";
+import {uiSliceActions, useDispatch} from "@/store";
 
 interface TaskProps {
-  task: ITask;
-  onEdit?: (task: ITask) => void;
+  task: ITasksResponse;
+  onEdit?: (task: ITasksResponse) => void;
   className?: string;
 }
 
 const Task = ({ task, onEdit, className }: TaskProps) => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasOverflow, setHasOverflow] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
-  const newStatus: TaskStatus = task.status === "done" ? "todo" : "done";
-  const handleToggleStatus = async () => {
-    setIsUpdating(true);
-    try {
-      await updateTaskStatus(task.id, newStatus);
-      dispatch(tasksSliceActions.updateTaskStatus({ id: task.id, status: newStatus }));
-    } finally {
-      setIsUpdating(false);
-    }
+  const patchTask = usePatchTask({
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      const message = variables.status ? "Zadanie wykonane" : "Przywrócono zadanie";
+      dispatch(uiSliceActions.setNotification({ message, variant: "success" }));
+    },
+  });
+
+  const handleToggleStatus = () => {
+    patchTask.mutate({ id: task.id, status: !task.status });
   };
 
   useEffect(() => {
@@ -47,9 +48,9 @@ const Task = ({ task, onEdit, className }: TaskProps) => {
         "relative flex flex-1 flex-col gap-2 min-h-50 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] p-4 shadow-sm transition-shadow hover:shadow-md",
         className
       )}
-      style={{ borderLeftWidth: "4px", borderLeftColor: STATUS_COLOR[task.status] }}
+      style={{ borderLeftWidth: "4px", borderLeftColor: STATUS_COLOR[Number(task.status)] }}
     >
-      {isUpdating && (
+      {patchTask.isPending && (
         <div
           className="absolute inset-0 z-10 flex items-center justify-center rounded-[var(--radius)] bg-[var(--card)]/80"
           aria-busy="true"
@@ -64,7 +65,7 @@ const Task = ({ task, onEdit, className }: TaskProps) => {
         className="absolute right-0 top-0 !h-8 !min-h-0 !w-8 !p-0 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
         aria-label="Edytuj zadanie"
         onClick={() => onEdit?.(task)}
-        disabled={isUpdating}
+        disabled={patchTask.isPending}
       >
         <Pencil className="size-4" />
       </Button>
@@ -108,18 +109,18 @@ const Task = ({ task, onEdit, className }: TaskProps) => {
           <span
             className={cn(
               "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
-              task.status === "done" && "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
-              task.status === "todo" && "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+              task.status && "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+              !task.status && "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
             )}
           >
-            {STATUS_LABELS[task.status]}
+            {STATUS_LABELS[Number(task.status)]}
           </span>
           <span
             className={cn(
               "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
-              task.priority === "high" && "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-              task.priority === "medium" && "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-              task.priority === "low" && "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+              task.priority === 3 && "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+              task.priority === 2 && "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+              task.priority === 1 && "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
             )}
           >
             {PRIORITY_LABELS[task.priority]}
@@ -131,10 +132,10 @@ const Task = ({ task, onEdit, className }: TaskProps) => {
           size="sm"
           className="!h-7 shrink-0 gap-1.5 text-xs"
           onClick={handleToggleStatus}
-          disabled={isUpdating}
-          aria-label={task.status === "done" ? "Przywróć do zrobienia" : "Oznacz jako zrobione"}
+          disabled={patchTask.isPending}
+          aria-label={task.status ? "Przywróć do zrobienia" : "Oznacz jako zrobione"}
         >
-          {task.status === "done" ? (
+          {task.status ? (
             <>
               <ArrowCounterclockwise className="size-3.5" />
               Do zrobienia

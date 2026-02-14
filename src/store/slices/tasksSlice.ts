@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ITask, TaskStatus } from "@/types/task";
 import { mockTasks } from "@/mocks/tasks";
+import type {ITasksResponse} from "@/api/types";
 
 interface ITasksSlice {
-  tasks: ITask[];
+  tasks: ITasksResponse[];
 }
 
 const initialState: ITasksSlice = {
@@ -14,11 +14,11 @@ export const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    updateTaskStatus: (state, action: PayloadAction<{ id: string; status: TaskStatus }>) => {
+    updateTaskStatus: (state, action: PayloadAction<{ id: string; status: boolean }>) => {
       const task = state.tasks.find((t) => t.id === action.payload.id);
       if (task) task.status = action.payload.status;
     },
-    setTasks: (state, action: PayloadAction<ITask[]>) => {
+    setTasks: (state, action: PayloadAction<ITasksResponse[]>) => {
       state.tasks = action.payload;
     },
   },
