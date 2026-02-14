@@ -6,7 +6,7 @@ const Routes = () => {
   return(
     <RouterRoutes>
       <Route element={<MainLayout />}>
-        <Route index element={<Dashboard />} />
+        <Route path={'*'} element={<Dashboard />} />
         <Route path={'/done'} element={<DoneTasks />} />
       </Route>
     </RouterRoutes>
