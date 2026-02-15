@@ -1,8 +1,8 @@
 # Tasks – frontend
 
-Aplikacja React do zarządzania zadaniami (frontend rekrutacyjny).
+Aplikacja React do zarządzania zadaniami.
 
-## Uruchomienie projektu (dla rekrutera)
+## Uruchomienie projektu
 
 ### 1. Pobranie repozytorium
 
