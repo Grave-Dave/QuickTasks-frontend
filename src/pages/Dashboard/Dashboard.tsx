@@ -44,7 +44,7 @@ const Dashboard = () => {
     );
   }
 
-  if (!data) {
+  if (!data || !data.items.length) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 pr-8 pb-4 pl-4 text-muted-foreground">
         Brak zadań

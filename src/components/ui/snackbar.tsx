@@ -7,7 +7,7 @@ import { uiSliceActions } from "@/store/slices/uiSlice";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 
-const SNACKBAR_DURATION_MS = 15000;
+const SNACKBAR_DURATION_MS = 5000;
 
 const variantStyles = {
   success: "border-green-500/50 bg-green-500/15 text-green-800 dark:text-green-200",

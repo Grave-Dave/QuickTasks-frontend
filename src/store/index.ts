@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { tasksSlice, tasksSliceActions, uiSlice, uiSliceActions } from './slices';
+import { uiSlice, uiSliceActions } from './slices';
 
 import {
   type TypedUseSelectorHook,
@@ -10,7 +10,6 @@ import {
 export const store = configureStore({
   reducer: {
     ui: uiSlice,
-    tasks: tasksSlice,
   },
 });
 
@@ -21,8 +20,7 @@ export const useDispatch: () => AppDispatch = useDispatchRedux;
 export const useSelector: TypedUseSelectorHook<RootState> = useSelectorRedux;
 
 export const reduxActions = {
-  ...uiSliceActions,
-  ...tasksSliceActions,
+  ...uiSliceActions
 };
 
-export { uiSliceActions, tasksSliceActions } from "./slices";
+export { uiSliceActions } from "./slices";

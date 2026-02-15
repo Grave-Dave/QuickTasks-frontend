@@ -6,7 +6,7 @@ import {useDispatch} from "@/store";
 import {uiSliceActions} from "@/store";
 import {useGetTasks} from "@/api";
 
-const TASKS_PER_PAGE = 6;
+const TASKS_PER_PAGE = 9;
 
 const DoneTasks = () => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const DoneTasks = () => {
     );
   }
 
-  if (!data) {
+  if (!data || !data.items.length) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 pr-8 pb-4 pl-4 text-muted-foreground">
         Brak wykonanych zadań
