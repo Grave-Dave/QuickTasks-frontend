@@ -8,7 +8,6 @@ Aplikacja React do zarządzania zadaniami.
 
 ```bash
 git clone https://github.com/Grave-Dave/QuickTasks-frontend.git
-cd tasks-fe
 ```
 
 ### 2. Instalacja zależności
